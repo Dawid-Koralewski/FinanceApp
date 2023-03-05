@@ -40,6 +40,7 @@ public:
     double getAmount();
 
     void printRecordData();
+    void printRecordDataInBalanceFormat();
 
 };
 

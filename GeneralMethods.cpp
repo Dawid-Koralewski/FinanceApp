@@ -11,6 +11,7 @@ string GeneralMethods::conversionIntToString(int number)
 string GeneralMethods::readLine()
 {
     string input = "";
+    cin.sync();
     getline(cin, input);
     return input;
 }
@@ -22,6 +23,7 @@ char GeneralMethods::readChar()
 
     while (true)
     {
+        cin.sync();
         getline(cin, input);
 
         if (input.length() == 1)
@@ -37,7 +39,7 @@ char GeneralMethods::readChar()
 string GeneralMethods::getNumber(string text, int charPosition)
 {
     string number = "";
-    while(isdigit(text[charPosition]) == true)
+    while(isdigit(text[charPosition]))
     {
         number += text[charPosition];
         charPosition ++;
@@ -71,12 +73,13 @@ int GeneralMethods::readInteger()
 
     while (true)
     {
+        cin.sync();
         getline(cin, wejscie);
 
         stringstream myStream(wejscie);
         if (myStream >> liczba)
             break;
-        cout << "To nie jest liczba. Wpisz ponownie. " << endl;
+        cout << "This is not a number. Try again. " << endl;
     }
     return liczba;
 }

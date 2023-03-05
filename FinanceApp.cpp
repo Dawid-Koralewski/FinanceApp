@@ -53,7 +53,8 @@ void FinanceApp::showMainMenu()
                 break;
 
             case '8':
-                //userManager.changeLoggedInUserPassword();
+                userManager.changeLoggedInUserPassword(loggedInUserID);
+                loggedInUserID = 0;
                 break;
 
             case '9':

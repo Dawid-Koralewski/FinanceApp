@@ -94,3 +94,21 @@ void Record::printRecordData()
     cout << endl << "Item:               " << getType() << endl;
     cout << endl << "Amount:             " << getAmount() << endl;
 }
+
+void Record::printRecordDataInBalanceFormat()
+{
+    cout << endl << getDate().getYear() << "-";
+
+    if (getDate().getMonth() < 10)
+        cout << "0" << getDate().getMonth() << "-";
+    else
+        cout << getDate().getMonth() << "-";
+
+    if(getDate().getDay() < 10)
+        cout << "0" << getDate().getDay();
+    else
+        cout << getDate().getDay();
+
+    cout << "       " << getType();
+    cout << "           " << getAmount() << endl;
+}

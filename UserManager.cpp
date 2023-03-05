@@ -113,20 +113,21 @@ int UserManager::userSignIn()
 //    return users;
 //}
 //
-//void UserManager::changeLoggedInUserPassword()
-//{
-//    string newPassword = "";
-//    cout << "New password: ";
-//    newPassword = GeneralMethods::readLine();
-//
-//    for (vector <User>::iterator itr = users.begin(); itr != users.end(); itr++)
-//    {
-//        if (itr -> getID() == loggedInUser.getID())
-//        {
-//            itr -> setPassword(newPassword);
-//            cout << "Password has been changed." << endl << endl;
-//            system("pause");
-//        }
-//    }
-//    usersFile.saveAllUsersToFile(users);
-//}
+void UserManager::changeLoggedInUserPassword(int loggedInUserID)
+{
+    string newPassword = "";
+    cout << "New password: ";
+    newPassword = GeneralMethods::readLine();
+
+    for (vector <User>::iterator itr = users.begin(); itr != users.end(); itr++)
+    {
+        if (itr -> getID() == loggedInUserID
+            )
+        {
+            itr -> setPassword(newPassword);
+            cout << "Password has been changed." << endl << endl;
+            system("pause");
+        }
+    }
+    usersFile.saveAllUsersToFile(users);
+}

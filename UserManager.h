@@ -29,6 +29,7 @@ public:
     void userSignUp();
     void printAllUsers();
     int userSignIn();
+    void changeLoggedInUserPassword(int loggedInUserID);
 //    vector <User> getUsers();
 //    void changeLoggedInUserPassword();
 };

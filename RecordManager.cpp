@@ -281,52 +281,160 @@ void RecordManager::showBalanceBetweenSelectedDates(Date startDate, Date endDate
     vector <Record> incomesSorted = incomes;
     vector <Record> expensesSorted = expenses;
 
-    incomesSorted = clearRecordsOutOfRange(incomesSorted, startDate, endDate);
-    expensesSorted = clearRecordsOutOfRange(expensesSorted, startDate, endDate);
+    if (!incomesSorted.empty())
+    {
+        incomesSorted = clearRecordsOutOfRange(incomesSorted, startDate, endDate);
+        if (!incomesSorted.empty())
+            incomesSorted = sortRecords(incomesSorted);
+        else
+            cout << endl << "No records in current date range in incomes file." << endl;
+    }
+    else
+    {
+        cout << endl << "No records in incomes file for current user." << endl << endl;
+    }
 
-    incomesSorted = sortRecords(incomesSorted, startDate, endDate);
-    expensesSorted = sortRecords(expensesSorted, startDate, endDate);
+    if (!expensesSorted.empty())
+    {
+        expensesSorted = clearRecordsOutOfRange(expensesSorted, startDate, endDate);
+        if (!incomesSorted.empty())
+            expensesSorted = sortRecords(expensesSorted);
+        else
+            cout << endl << "No records in current date range in expenses file." << endl;
+    }
+    else
+    {
+        cout << endl << "No records in expenses file for current user." << endl << endl;
+    }
+
+    cout << endl << "===============INCOMES==============";
+    cout << endl << "Date             Type         Amount" << endl;
+    printAllRecordsInBalanceFormat(incomesSorted);
+    cout << endl << endl << "==============EXPENSES==============";
+    cout << endl << "Date             Type         Amount" << endl;
+    printAllRecordsInBalanceFormat(expensesSorted);
+
+    double sumOfIncomes = calculateSumOfRecords(incomesSorted);
+    double sumOfExpenses = calculateSumOfRecords(expensesSorted);
+    cout << "INCOMES: " << sumOfIncomes << " | EXPENSES: " << sumOfExpenses << " | Balance: " << sumOfIncomes - sumOfExpenses << endl;
+    system("pause");
+}
+
+double RecordManager::calculateSumOfRecords(vector <Record> records)
+{
+    double sum = 0.0;
+
+    for (vector <Record> :: iterator itr = records.begin(); itr != records.end() && !records.empty(); itr++)
+    {
+        sum += itr -> getAmount();
+    }
+
+    return sum;
 }
 
 vector <Record> RecordManager::clearRecordsOutOfRange(vector <Record> records, Date startDate, Date endDate)
 {
     Date tempDate;
-    if (!records.empty())
+    for (vector <Record> :: iterator itr = records.begin(); itr != records.end() && !records.empty(); itr++)
     {
-        for (vector <Record> :: iterator itr = records.begin(); itr != records.end(); itr++)
+        tempDate = itr -> getDate();
+        if (tempDate.getYear() < startDate.getYear() || tempDate.getYear() > endDate.getYear())
         {
-            tempDate = itr -> getDate();
-            if (tempDate.getYear() < startDate.getYear() || tempDate.getYear() > endDate.getYear())
-            {
-                itr = records.erase(itr);
-            }
-            else if (tempDate.getMonth() < startDate.getMonth() || tempDate.getMonth() > endDate.getMonth())
-            {
-                itr = records.erase(itr);
-            }
-            else if (tempDate.getDay() < startDate.getDay() || tempDate.getDay() > endDate.getDay())
-            {
-                itr = records.erase(itr);
-            }
-            else
-            {
-                itr++;
-            }
+            records.erase(itr);
+        }
+        else if (tempDate.getMonth() < startDate.getMonth() || tempDate.getMonth() > endDate.getMonth())
+        {
+            records.erase(itr);
+        }
+        else if (tempDate.getDay() < startDate.getDay() || tempDate.getDay() > endDate.getDay())
+        {
+            records.erase(itr);
         }
     }
-    else
-    {
-        cout << endl << "No records." << endl << endl;
-    }
-
-    printAllRecords(records);
-
     return records;
 }
 
-vector <Record> RecordManager::sortRecords(vector <Record> records, Date startDate, Date endDate)
+vector <Record> RecordManager::sortRecords(vector <Record> records)
 {
+    vector <Record> recordsSorted;
+    vector <Record> :: iterator itr = records.begin();
+    vector <Record> :: iterator itrToRecordWithEarliestDateInVector = records.begin();
 
+    int IDOfRecordWithEarliestDateInVector = itr -> getID();
+
+    while (!records.empty())
+    {
+        itr = records.begin();
+        IDOfRecordWithEarliestDateInVector = itr -> getID();
+
+        while (itr != records.end())
+        {
+            if (checkIfRecordIsFromEarlierThanCurrentEarliest(itrToRecordWithEarliestDateInVector -> getDate(), itr -> getDate()))
+            {
+                IDOfRecordWithEarliestDateInVector = itr -> getID();
+            }
+
+            itr++;
+        }
+
+
+        recordsSorted.push_back(findRecordByID(records, IDOfRecordWithEarliestDateInVector));
+        deleteRecordByID(records, IDOfRecordWithEarliestDateInVector);
+    }
+
+    return recordsSorted;
+}
+
+Record RecordManager::findRecordByID(vector <Record> records, int recordID)
+{
+    Record record;
+
+    for (vector <Record> :: iterator itr = records.begin(); itr != records.end() && !records.empty(); itr++)
+    {
+        if (recordID == itr -> getID())
+        {
+            record = *itr;
+            return record;
+        }
+    }
+}
+
+Record RecordManager::convertRecordItrToRecord(vector <Record> :: iterator itr)
+{
+    Record record;
+
+    record.setID(itr -> getID());
+    record.setUserID(itr -> getUserID());
+    record.setDate(itr -> getDate());
+    record.setType(itr -> getType());
+    record.setAmount(itr -> getAmount());
+
+    return record;
+}
+
+void RecordManager::deleteRecordByID(vector <Record> &records, int recordID)
+{
+    for (vector <Record> :: iterator itr = records.begin(); itr != records.end() && !records.empty(); itr++)
+    {
+        if (recordID == itr -> getID())
+        {
+            records.erase(itr);
+            return;
+        }
+    }
+    return;
+}
+
+bool RecordManager::checkIfRecordIsFromEarlierThanCurrentEarliest(Date earliestDate, Date dateToCheck)
+{
+    if (dateToCheck.getYear() < earliestDate.getYear())
+        return true;
+    else if ((dateToCheck.getYear() == earliestDate.getYear()) && dateToCheck.getMonth() < earliestDate.getMonth())
+        return true;
+    else if ((dateToCheck.getYear() == earliestDate.getYear()) && dateToCheck.getMonth() == earliestDate.getMonth() && dateToCheck.getDay() < earliestDate.getDay())
+        return true;
+    else
+        return false;
 }
 
 //int RecordManager::getLoggedInUserID()
@@ -378,6 +486,23 @@ void RecordManager::printAllRecords(vector <Record> records)
     }
     system("pause");
 }
+
+void RecordManager::printAllRecordsInBalanceFormat(vector <Record> records)
+{
+    if (!records.empty())
+    {
+        for (vector <Record> :: iterator itr = records.begin(); itr != records.end(); itr++)
+        {
+            itr -> printRecordDataInBalanceFormat();
+        }
+        cout << endl;
+    }
+    else
+    {
+        cout << endl << "No records." << endl << endl;
+    }
+}
+
 //
 //int RecordManager::provideChosenRecordID()
 //{

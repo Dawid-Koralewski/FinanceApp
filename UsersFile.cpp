@@ -99,34 +99,11 @@ vector <User> UsersFile::loadUsersFromFile()
 //    return user;
 //}
 //
-//void UsersFile::saveAllUsersToFile(vector <User> &users)
-//{
-//    fstream textFile;
-//    string lineWithUserData = "";
-//    vector <User>::iterator itrEnd = --users.end();
-//
-//    textFile.open(getFileName().c_str(), ios::out);
-//
-//    if (textFile.good() == true)
-//    {
-//        for (vector <User>::iterator itr = users.begin(); itr != users.end(); itr++)
-//        {
-//            lineWithUserData = convertUserDataToDataInFileSyntax(*itr);
-//
-//            if (itr == itrEnd)
-//            {
-//               textFile << lineWithUserData;
-//            }
-//            else
-//            {
-//                textFile << lineWithUserData << endl;
-//            }
-//            lineWithUserData = "";
-//        }
-//    }
-//    else
-//    {
-//        cout << "It was not possible to open file " << getFileName() << endl;
-//    }
-//    textFile.close();
-//}
+void UsersFile::saveAllUsersToFile(vector <User> &users)
+{
+    remove("users.xml");
+    for (vector <User> :: iterator itr = users.begin(); itr != users.end() && !users.empty(); itr++)
+    {
+        addUserToFile(*itr);
+    }
+}
