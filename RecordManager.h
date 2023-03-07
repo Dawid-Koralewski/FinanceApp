@@ -22,8 +22,22 @@ class RecordManager
     IncomesFile incomesFile;
     ExpensesFile expensesFile;
     const int LOGGED_IN_USER_ID;
-    int lastIncomeID = 0;
-    int lastExpenseID = 0;
+
+    // new record private functions
+    Record provideNewRecordData(string type);
+    Date provideDateOfRecord();
+    double provideAmountOfRecord();
+    bool checkCorrectnessOfDate(string dateStr);
+    bool checkCorrectnessOfAmount(string amountStr);
+
+    // balance private functions
+    void showBalanceBetweenSelectedDates(Date startDate, Date endDate);
+    vector <Record> clearRecordsOutOfRange(vector <Record> records, Date startDate, Date endDate);
+    vector <Record> sortRecords(vector <Record> records);
+    bool checkIfRecordIsFromEarlierThanCurrentEarliest(Date earliestDate, Date dateToCheck);
+    void deleteRecordByID(vector <Record> &records, int recordID);
+    Record findRecordByID(vector <Record> records, int recordID);
+    double calculateSumOfRecords(vector <Record> records);
 
 public:
     RecordManager(string incomesFileName, string expensesFileName, int loggedInUserID)
@@ -31,36 +45,21 @@ public:
     {
         loadLoggedInUserRecordsFromFile(LOGGED_IN_USER_ID);
     };
-//    Record provideNewRecordData();
-    bool checkCorrectnessOfDate(string dateStr);
-    bool checkCorrectnessOfAmount(string amountStr);
+
+    void loadLoggedInUserRecordsFromFile(int loggedInUserID);
+
+    // new record public functions
     void addIncome();
     void addExpense();
-//    void setLastRecordID(int newID);
-    Record provideNewRecordData(string type);
-    Date provideDateOfRecord();
-    double provideAmountOfRecord();
-    void loadLoggedInUserRecordsFromFile(int loggedInUserID);
+
+    // balance private functions
     void showBalanceFromCurrentMonth();
     void showBalanceFromPreviousMonth();
     void showBalanceFromSpecificRange();
-    void showBalanceBetweenSelectedDates(Date startDate, Date endDate);
-    vector <Record> clearRecordsOutOfRange(vector <Record> records, Date startDate, Date endDate);
-    vector <Record> sortRecords(vector <Record> records);
-    bool checkIfRecordIsFromEarlierThanCurrentEarliest(Date earliestDate, Date dateToCheck);
-    Record convertRecordItrToRecord(vector <Record> :: iterator itr);
-    void deleteRecordByID(vector <Record> &records, int recordID);
-    Record findRecordByID(vector <Record> records, int recordID);
-//    int getLoggedInUserID();
-//    int getRecordIDFromDataInFileSyntax(string dataInFileSyntax);
-//    Record getRecordDataFromDataInFileSyntax(string recordDataInFileSyntax);
-//    vector <Record> getRecords();
+
+    // print functions
     void printAllRecords(vector <Record> records);
     void printAllRecordsInBalanceFormat(vector <Record> records);
-    double calculateSumOfRecords(vector <Record> records);
-//    int getLastRecordID();
-//    string convertRecordDataToFileSyntax(Record record);
-//    int provideChosenRecordID();
 };
 
 #endif

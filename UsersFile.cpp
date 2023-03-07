@@ -28,22 +28,10 @@ void UsersFile::addUserToFile(User user)
     usersFile.Save(getFileName());
 }
 
-//string UsersFile::convertUserDataToDataInFileSyntax(User user)
-//{
-//    string lineWithUserData = "";
-//
-//    lineWithUserData += GeneralMethods::conversionIntToString(user.getID())+ '|';
-//    lineWithUserData += user.getLogin() + '|';
-//    lineWithUserData += user.getPassword() + '|';
-//
-//    return lineWithUserData;
-//}
-
 vector <User> UsersFile::loadUsersFromFile()
 {
     User user;
     vector <User> users;
-    vector <User>::iterator itr = users.begin();
     string singleUserDataInFileSyntax = "";
     CMarkup usersFile;
     int lastUserID = 0;
@@ -88,17 +76,6 @@ vector <User> UsersFile::loadUsersFromFile()
     return users;
 }
 
-//User UsersFile::getUserDataFromDataInFileSyntax(string singleUserDataInFileSyntax)
-//{
-//    User user;
-//    string singleUserData = "";
-//    //int numerPojedynczejDanejUzytkownika = 1;
-//
-//    // TODO //
-//
-//    return user;
-//}
-//
 void UsersFile::saveAllUsersToFile(vector <User> &users)
 {
     remove("users.xml");

@@ -14,18 +14,10 @@ using namespace std;
 
 class IncomesFile : public XMLFile
 {
-//    Record getRecordDataFromDataInFileSyntax(string dataInFileSyntax);
 
 public:
+    int lastIncomeID = 0;
     IncomesFile(string fileName) : XMLFile(fileName) {};
-//    int getRecordIDFromDataInFileSyntax(string dataInFileSyntax);
-//    int getUserIDFromDataInFileSyntax(string dataInFileSyntax);
-//    int loadLoggedInUserRecordsFromFile(vector <Record> &incomes, int loggedInUserID);
-//    void addRecordToFile(Record record);
-//    string convertRecordDataToFileSyntax(Record record);
-//    int getLastRecordFromFile();
-//    void deleteFile(string fileNameIncludingExtention);
-//    void changeFileName(string oldFileName, string newFileName);
 };
 
 #endif

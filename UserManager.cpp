@@ -1,6 +1,5 @@
 #include "UserManager.h"
 
-
 User UserManager::provideNewUserData()
 {
     User user;
@@ -108,11 +107,6 @@ int UserManager::userSignIn()
     return 0;
 }
 
-//vector <User> UserManager::getUsers()
-//{
-//    return users;
-//}
-//
 void UserManager::changeLoggedInUserPassword(int loggedInUserID)
 {
     string newPassword = "";

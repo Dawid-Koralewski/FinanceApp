@@ -5,23 +5,29 @@ Record RecordManager::provideNewRecordData(string type)
     Record record;
     char choice = ' ';
     if (type == "income")
-        record.setID(++lastIncomeID);
+    {
+        incomesFile.lastIncomeID += 1;
+        record.setID(incomesFile.lastIncomeID);
+    }
     else if (type == "expense")
-        record.setID(++lastExpenseID);
+    {
+        expensesFile.lastExpenseID += 1;
+        record.setID(expensesFile.lastExpenseID);
+    }
 
     record.setUserID(LOGGED_IN_USER_ID);
 
     cout << endl << "Is this record from today? (Y=yes, N=no): ";
     choice = GeneralMethods::readChar();
 
-    while (choice != 'N' && choice != 'Y')
+    while (choice != 'N' && choice != 'Y' && choice != 'n' && choice != 'y')
     {
         cout << endl << endl << "This was not correct choice, please type in \"Y\" if the record is from today, if not please type in \"N\"";
         cout << endl << "Is this record from today? (Y=yes, N=no): ";
         choice = GeneralMethods::readChar();
     }
 
-    if (choice == 'Y')
+    if (choice == 'Y' || choice == 'y')
     {
         time_t now = time(0);
         tm *ltm = localtime(&now); // tutorialspoint.com/cplusplus/cpp_date_time.htm#
@@ -176,7 +182,10 @@ void RecordManager::addIncome()
     incomes.push_back(record);
     incomesFile.addRecordToFile(record);
 
-    lastIncomeID++;
+    incomesFile.lastIncomeID += 1;
+
+    cout << endl << "Record successfully added!" << endl;
+    system("pause");
     return;
 }
 
@@ -191,19 +200,17 @@ void RecordManager::addExpense()
     expenses.push_back(record);
     expensesFile.addRecordToFile(record);
 
-    lastExpenseID++;
+    expensesFile.lastExpenseID += 1;
+
+    cout << endl << "Record successfully added!" << endl;
+    system("pause");
     return;
 }
 
-//void RecordManager::setLastRecordID(int newID)
-//{
-//    lastRecordID = newID;
-//}
-//
 void RecordManager::loadLoggedInUserRecordsFromFile(int loggedInUserID)
 {
-    lastIncomeID = incomesFile.loadLoggedInUserRecordsFromFile(incomes, loggedInUserID);
-    lastExpenseID = expensesFile.loadLoggedInUserRecordsFromFile(expenses, loggedInUserID);
+    incomesFile.lastIncomeID = incomesFile.loadLoggedInUserRecordsFromFile(incomes, loggedInUserID);
+    expensesFile.lastExpenseID = expensesFile.loadLoggedInUserRecordsFromFile(expenses, loggedInUserID);
 }
 
 void RecordManager::showBalanceFromCurrentMonth()
@@ -261,7 +268,7 @@ void RecordManager::showBalanceFromSpecificRange()
 
     endDate = GeneralMethods::convertionStringDateToDate(dateStr);
 
-    cout << endl << endl << "Please provide STARTDATE of the date range in YYYY-MM-DD format.";
+    cout << endl << endl << "Please provide ENDDATE of the date range in YYYY-MM-DD format.";
     cout << endl << "(The earliest possible date is 2000-01-01): ";
     dateStr = GeneralMethods::readLine();
     while (!checkCorrectnessOfDate(dateStr))
@@ -359,6 +366,7 @@ vector <Record> RecordManager::sortRecords(vector <Record> records)
     vector <Record> recordsSorted;
     vector <Record> :: iterator itr = records.begin();
     vector <Record> :: iterator itrToRecordWithEarliestDateInVector = records.begin();
+    Record recordTemp;
 
     int IDOfRecordWithEarliestDateInVector = itr -> getID();
 
@@ -377,8 +385,12 @@ vector <Record> RecordManager::sortRecords(vector <Record> records)
             itr++;
         }
 
+        recordTemp = findRecordByID(records, IDOfRecordWithEarliestDateInVector);
 
-        recordsSorted.push_back(findRecordByID(records, IDOfRecordWithEarliestDateInVector));
+        if (recordTemp.getID() != 0)
+        {
+            recordsSorted.push_back(recordTemp);
+        }
         deleteRecordByID(records, IDOfRecordWithEarliestDateInVector);
     }
 
@@ -397,17 +409,6 @@ Record RecordManager::findRecordByID(vector <Record> records, int recordID)
             return record;
         }
     }
-}
-
-Record RecordManager::convertRecordItrToRecord(vector <Record> :: iterator itr)
-{
-    Record record;
-
-    record.setID(itr -> getID());
-    record.setUserID(itr -> getUserID());
-    record.setDate(itr -> getDate());
-    record.setType(itr -> getType());
-    record.setAmount(itr -> getAmount());
 
     return record;
 }
@@ -437,38 +438,6 @@ bool RecordManager::checkIfRecordIsFromEarlierThanCurrentEarliest(Date earliestD
         return false;
 }
 
-//int RecordManager::getLoggedInUserID()
-//{
-//    return LOGGED_IN_USER_ID;
-//}
-//
-//int RecordManager::getLastRecordID()
-//{
-//    return lastRecordID;
-//}
-//
-//int RecordManager::getRecordIDFromDataInFileSyntax(string dataOfSingleRecordInFileSyntax)
-//{
-//    int recordID = 0;
-//    // TODO //
-//    return recordID;
-//}
-//
-//Record RecordManager::getRecordDataFromDataInFileSyntax(string recordDataInFileSyntax)
-//{
-//    Record record;
-//
-//    // TODO //
-//
-//    return record;
-//}
-//
-//vector <Record> RecordManager::getRecords()
-//{
-//    return records;
-//}
-//
-//
 void RecordManager::printAllRecords(vector <Record> records)
 {
     system("cls");
@@ -502,19 +471,3 @@ void RecordManager::printAllRecordsInBalanceFormat(vector <Record> records)
         cout << endl << "No records." << endl << endl;
     }
 }
-
-//
-//int RecordManager::provideChosenRecordID()
-//{
-//    int chosenRecordID = 0;
-//    cout << "Record ID: ";
-//    chosenRecordID  = GeneralMethods::readInteger();
-//    return chosenRecordID;
-//}
-//
-//string RecordManager::convertRecordDataToFileSyntax(Record record)
-//{
-//    string liniaZDanymirecorda = "";
-//
-//    return liniaZDanymirecorda;
-//}

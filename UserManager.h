@@ -18,7 +18,6 @@ class UserManager
     UsersFile usersFile;
 
     User provideNewUserData();
-//    User loggedInUser;
     int getNewUserID();
     bool doesLoginExist(string login);
 
@@ -30,8 +29,6 @@ public:
     void printAllUsers();
     int userSignIn();
     void changeLoggedInUserPassword(int loggedInUserID);
-//    vector <User> getUsers();
-//    void changeLoggedInUserPassword();
 };
 
 #endif

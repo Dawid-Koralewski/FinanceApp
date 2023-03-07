@@ -14,9 +14,6 @@ using namespace std;
 
 class UsersFile : public XMLFile
 {
-//    string convertUserDataToDataInFileSyntax(User user);
-//    User getUserDataFromDataInFileSyntax(string singleUserDataInFileSyntax);
-//
 public:
     UsersFile(string fileName) : XMLFile(fileName) {}
     void addUserToFile(User user);

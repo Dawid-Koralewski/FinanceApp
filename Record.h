@@ -2,6 +2,7 @@
 #define RECORD_H
 
 #include <iostream>
+#include <cmath>
 
 #include "GeneralMethods.h"
 #include "Date.h"

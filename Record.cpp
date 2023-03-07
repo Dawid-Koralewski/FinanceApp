@@ -110,5 +110,9 @@ void Record::printRecordDataInBalanceFormat()
         cout << getDate().getDay();
 
     cout << "       " << getType();
-    cout << "           " << getAmount() << endl;
+
+    if ((fmod(getAmount(), 1)) == 0)
+        cout << "           " << getAmount() << ".00" << endl;
+    else
+        cout << "           " << getAmount() << endl;
 }
